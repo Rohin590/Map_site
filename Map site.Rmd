@@ -1,0 +1,40 @@
+---
+title: "Map website"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, include=FALSE}
+library(leaflet)
+library(htmltools)
+datamap <- read.csv(file = "The Worlds 50 Best Restaurants 2018.csv", header = TRUE, sep = ",")
+```
+```{r}
+mimapa <- data.frame(Ranking = datamap$Ranking,
+                     Name = datamap$Name,
+                     City = datamap$City,
+                     Country = datamap$Country,
+                     Latitude = datamap$Latitude,
+                     Longitude = datamap$Longitude
+                     )
+
+map <- mimapa %>%
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(popup=paste
+             ("<br>Country: ", 
+               htmlEscape(mimapa$Country), 
+              "<br>City: ", 
+               htmlEscape(mimapa$City), 
+              "<br>Restaurant: ", 
+               htmlEscape(mimapa$Name),
+              "<br>Ranking: ",
+               formatC(datamap$Ranking, format = "d", big.mark = ",")
+              ) 
+            )
+map
+```
